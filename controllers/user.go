@@ -57,10 +57,32 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := auth.GenerateToken(t.ID)
+	sessionID, err := auth.NewSessionID()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "failed to create session",
+		})
+		return
+	}
+
+	tokens, state, err := auth.GenerateTokenPair(
+		t.ID,
+		sessionID,
+	)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "failed to generate token",
+		})
+		return
+	}
+
+	if err := auth.StoreSession(
+		c.Request.Context(),
+		sessionID,
+		state,
+	); err != nil {
+		c.JSON(http.StatusServiceUnavailable, gin.H{
+			"message": "authentication service unavailable",
 		})
 		return
 	}
@@ -69,10 +91,10 @@ func Login(c *gin.Context) {
 		"message": "login successfully",
 		"user": gin.H{
 			"id":    t.ID,
-			"token": token,
 			"name":  t.Name,
 			"email": t.Email,
 		},
+		"token": tokens,
 	})
 }
 
@@ -116,5 +138,29 @@ func Register(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{
 		"message": "register successfully",
+	})
+}
+
+func Logout(c *gin.Context) {
+	sessionID := c.GetString("SessionID")
+	if sessionID == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "invalid session",
+		})
+		return
+	}
+
+	if err := auth.RevokeSession(
+		c.Request.Context(),
+		sessionID,
+	); err != nil {
+		c.JSON(http.StatusServiceUnavailable, gin.H{
+			"message": "authentication service unavailable",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "logout successfully",
 	})
 }
