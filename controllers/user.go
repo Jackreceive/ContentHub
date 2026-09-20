@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"example/web-service-gin/auth"
 	"example/web-service-gin/db"
 	"example/web-service-gin/models"
 	"net/http"
@@ -55,10 +56,20 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+
+	token, err := auth.GenerateToken(t.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "failed to generate token",
+		})
+		return
+	}
+
 	c.JSON(200, gin.H{
 		"message": "login successfully",
 		"user": gin.H{
 			"id":    t.ID,
+			"token": token,
 			"name":  t.Name,
 			"email": t.Email,
 		},
