@@ -14,7 +14,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	db.DB.AutoMigrate(&models.User{})
+	if err := db.DB.AutoMigrate(&models.User{}, &models.Article{}); err != nil {
+		panic(err)
+	}
 	r := gin.Default()
 	v1 := r.Group("/v1")
 	{

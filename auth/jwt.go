@@ -82,7 +82,7 @@ func Middleware() gin.HandlerFunc {
 			})
 			return
 		}
-		claims, err := ParseToken(authorization)
+		claims, err := ParseToken(parts[1])
 		if err != nil {
 			c.AbortWithStatusJSON(401, gin.H{
 				"message": "invalid or expired authorization",
