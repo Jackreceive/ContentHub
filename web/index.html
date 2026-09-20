@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="一页，一个安静、专注的轻量写作空间。">
+  <meta name="theme-color" content="#f7f8fa">
+  <title>一页 · 写作与阅读</title>
+  <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <main id="authView" class="auth-view">
+    <section class="auth-intro" aria-labelledby="brandTitle">
+      <a class="wordmark" href="/" aria-label="一页首页">
+        <span class="wordmark-dot"></span>
+        <span>一页</span>
+      </a>
+      <div class="auth-statement">
+        <p class="eyebrow">A quiet place to write</p>
+        <h1 id="brandTitle">把想法，<br>留在这一页。</h1>
+        <p class="intro-copy">不追逐信息流，只留下值得重读的文字。</p>
+      </div>
+      <p class="edition">YIYE / 2026</p>
+      <span class="hero-glyph" aria-hidden="true">页</span>
+    </section>
+
+    <section class="auth-panel" aria-label="账户登录">
+      <div class="auth-box">
+        <div class="auth-heading">
+          <p class="eyebrow" id="authEyebrow">欢迎回来</p>
+          <h2 id="authTitle">继续写作</h2>
+        </div>
+
+        <form id="authForm" novalidate>
+          <div class="field register-only" hidden>
+            <label for="name">你的名字</label>
+            <input id="name" name="name" type="text" autocomplete="name" minlength="2" maxlength="50" placeholder="如何称呼你">
+          </div>
+          <div class="field">
+            <label for="email">邮箱</label>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="name@example.com">
+          </div>
+          <div class="field">
+            <label for="password">密码</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="72" required placeholder="至少 8 位字符">
+          </div>
+          <p id="authError" class="form-error" role="alert"></p>
+          <button class="primary-button auth-submit" type="submit">
+            <span id="authSubmitLabel">登录</span>
+            <span aria-hidden="true">↗</span>
+          </button>
+        </form>
+
+        <p class="auth-switch">
+          <span id="authSwitchText">第一次来到一页？</span>
+          <button id="authSwitch" class="text-button" type="button">创建账户</button>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <div id="appView" class="app-view" hidden>
+    <header class="site-header">
+      <a class="wordmark" href="#articles" data-view="articles" aria-label="一页首页">
+        <span class="wordmark-dot"></span>
+        <span>一页</span>
+      </a>
+
+      <nav class="main-nav" aria-label="主导航">
+        <button class="nav-item is-active" type="button" data-view="articles">文章</button>
+        <button class="nav-item" type="button" data-view="editor">写作</button>
+        <span class="nav-line" aria-hidden="true"></span>
+      </nav>
+
+      <div class="account-menu">
+        <button id="accountButton" class="account-button" type="button" aria-expanded="false" aria-controls="accountPopover">
+          <span id="avatar" class="avatar">Y</span>
+          <span id="accountName" class="account-name">作者</span>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div id="accountPopover" class="account-popover" hidden>
+          <p id="accountEmail"></p>
+          <button id="logoutButton" type="button">退出登录</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section id="articlesView" class="page-section" aria-labelledby="articlesTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Notes & essays</p>
+            <h1 id="articlesTitle">最近的文字</h1>
+          </div>
+          <button class="compose-link" type="button" data-view="editor" data-new-article>
+            <span>写一篇</span>
+            <span class="compose-icon" aria-hidden="true">＋</span>
+          </button>
+        </div>
+
+        <div class="index-toolbar">
+          <p><span id="articleCount">0</span> 篇文章</p>
+          <label class="search-field">
+            <span class="sr-only">搜索文章</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
+            <input id="searchInput" type="search" placeholder="搜索标题或作者">
+          </label>
+        </div>
+
+        <div id="articleList" class="article-list" aria-live="polite"></div>
+        <div id="listLoading" class="loading-state" aria-label="正在加载文章">
+          <span></span><span></span><span></span>
+        </div>
+        <div id="emptyState" class="empty-state" hidden>
+          <span class="empty-mark">〆</span>
+          <h2>这里还没有文字</h2>
+          <p>从一个标题开始，写下此刻不想忘记的事。</p>
+          <button class="text-button" type="button" data-view="editor" data-new-article>开始写作 →</button>
+        </div>
+      </section>
+
+      <section id="editorView" class="page-section editor-view" aria-labelledby="editorHeading" hidden>
+        <div class="editor-topline">
+          <button class="back-button" type="button" data-view="articles">← 返回文章</button>
+          <div class="editor-status">
+            <span id="saveStatus">尚未发布</span>
+            <span class="status-dot" aria-hidden="true"></span>
+          </div>
+        </div>
+
+        <form id="editorForm" class="editor-form">
+          <input id="editorTitle" class="title-input" name="title" maxlength="100" required placeholder="文章标题" aria-label="文章标题">
+          <div class="editor-rule"></div>
+          <textarea id="editorContent" name="content" required placeholder="从这里开始写……" aria-label="文章正文"></textarea>
+          <footer class="editor-footer">
+            <span><span id="charCount">0</span> 字</span>
+            <div class="editor-actions">
+              <button id="deleteButton" class="danger-button" type="button" hidden>删除</button>
+              <button id="cancelEditButton" class="secondary-button" type="button">取消</button>
+              <button id="publishButton" class="primary-button" type="submit">发布文章 <span aria-hidden="true">↗</span></button>
+            </div>
+          </footer>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="articleDialog" class="article-dialog">
+    <button id="closeDialog" class="dialog-close" type="button" aria-label="关闭">×</button>
+    <article>
+      <p id="dialogMeta" class="eyebrow"></p>
+      <h1 id="dialogTitle"></h1>
+      <div class="dialog-rule"></div>
+      <div id="dialogContent" class="dialog-content"></div>
+      <footer>
+        <div>
+          <span id="dialogAvatar" class="avatar"></span>
+          <p>写于 <strong id="dialogAuthor"></strong></p>
+        </div>
+        <button id="editArticleButton" class="text-button" type="button" hidden>编辑这篇文章 →</button>
+      </footer>
+    </article>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/assets/app.js" defer></script>
+</body>
+</html>
