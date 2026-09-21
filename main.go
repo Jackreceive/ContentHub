@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"example/web-service-gin/auth"
 	"example/web-service-gin/controllers"
 	"example/web-service-gin/db"
@@ -13,9 +12,8 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load(".env"); err != nil {
-		panic(errors.New("need .env file"))
-	}
+	_ = godotenv.Load(".env")
+
 	err := db.InitMySQL()
 	if err != nil {
 		panic(err)

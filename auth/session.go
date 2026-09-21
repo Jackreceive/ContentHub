@@ -33,7 +33,7 @@ func StoreSession(
 
 	err = db.Redis.Set(
 		ctx,
-		sessionKey(sessionID),
+		sessionID,
 		data,
 		refreshTokenTTL,
 	).Err()
@@ -50,7 +50,7 @@ func ValidateAccessSession(
 ) error {
 	data, err := db.Redis.Get(
 		ctx,
-		sessionKey(claims.SessionID),
+		claims.SessionID,
 	).Bytes()
 
 	if errors.Is(err, redis.Nil) {
@@ -78,7 +78,7 @@ func RotateSession(
 	claims *Claims,
 	next SessionState,
 ) error {
-	key := sessionKey(claims.SessionID)
+	key := claims.SessionID
 
 	nextData, err := json.Marshal(next)
 	if err != nil {
@@ -140,7 +140,7 @@ func RevokeSession(
 ) error {
 	if err := db.Redis.Del(
 		ctx,
-		sessionKey(sessionID),
+		sessionID,
 	).Err(); err != nil {
 		return fmt.Errorf("failed to revoke session: %w", err)
 	}
